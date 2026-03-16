@@ -1,5 +1,4 @@
 using AutoMapper;
-using API.Server.Models;
 using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Server.DTOs.RolesDTO;

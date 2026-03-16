@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt; // Sử dụng cho việc tạo JWT
 using System.Security.Claims; // Sử dụng cho Claims trong JWT
 using System.Text; // Sử dụng cho Encoding
 using API.Models;
-using API.Server.Models;
 using Microsoft.Extensions.Configuration; // Sử dụng để truy cập cấu hình
 using Microsoft.IdentityModel.Tokens; // Sử dụng cho Token Validation Parameters
 

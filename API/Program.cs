@@ -1,164 +1,152 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer; // Sử dụng cho việc xác thực JWT
-using Microsoft.IdentityModel.Tokens; // Sử dụng cho Token Validation Parameters
-using Microsoft.EntityFrameworkCore; // Sử dụng cho Entity Framework Core
-using System.Text; // Sử dụng cho Encoding
-using API; // Namespace chứa ApplicationDbContext
-using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
+using System.Text;
+using System.Text.Json.Serialization;
+using API;
+using API.EmailAotu;
+using API.Hubs;
+using API.Interfaces;
+using API.Server.Interfaces;
 using API.Server.Services;
 using API.Services;
-using API.Hubs;
-using API.Interfaces; // Namespace chứa các implement dịch vụ
-using API.Interfaces; // Namespace chứa các implement dịch vụ
-using API.Interfaces;
-using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
-using API.Interfaces;
-using System.Text.Json.Serialization;
-using Quartz.Spi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using Quartz.Impl;
-using API.EmailAotu; // Namespace chứa các implement dịch vụ
-using SendGrid.Helpers.Mail; // Namespace chứa các implement dịch vụ
+using Quartz.Spi;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        // Cấu hình SignalR
-        builder.Services.AddSignalR();
 
-        // Set up configuration
-        builder.Configuration.AddJsonFile("appsettings.json"); // Đọc cấu hình từ appsettings.json
+        // Database
         var connectionString = builder.Configuration.GetConnectionString("DbContext");
 
-        // Register database context
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseSqlServer(connectionString); // Đăng ký ApplicationDbContext với chuỗi kết nối từ appsettings.json
-        });
+            options.UseSqlServer(connectionString)
+        );
 
-        // Đọc cấu hình từ appsettings.json
+        // JWT Authentication
         var jwtSettings = builder.Configuration.GetSection("Jwt");
 
-        var secretKey = jwtSettings["Key"];
+        var secretKey = jwtSettings["Key"]
+            ?? throw new InvalidOperationException("JWT Key is missing");
+
         var issuer = jwtSettings["Issuer"];
         var audience = jwtSettings["Audience"];
-        var key = Encoding.ASCII.GetBytes(secretKey); // Mã hóa secret key thành mảng byte
 
-        // Đăng ký JwtTokenService với DI container
-        builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>(); // Đăng ký JwtTokenService với DI container
+        var key = Encoding.ASCII.GetBytes(secretKey);
 
-        // Register AutoMapper
-        builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-
-        builder.Services.AddControllers(); // Đăng ký các controller
-
-
-        // Cấu hình xác thực JWT
         builder.Services.AddAuthentication(options =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // Đặt mặc định cho xác thực sử dụng JWT Bearer
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Đặt mặc định cho thách thức xác thực sử dụng JWT Bearer
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
         .AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false, // Không cần xác thực issuer
-                ValidateAudience = false, // Không cần xác thực audience
-                ValidateLifetime = true, // Xác thực thời gian sống của token
-                ValidateIssuerSigningKey = true, // Xác thực khóa ký token
-                ValidIssuer = issuer, // Cấu hình Issuer hợp lệ
-                ValidAudience = audience, // Cấu hình Audience hợp lệ
-                IssuerSigningKey = new SymmetricSecurityKey(key), // Khóa ký token
-                ClockSkew = TimeSpan.Zero // Không cho phép chênh lệch thời gian
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero
             };
         });
 
-        // Register HttpClient
-        builder.Services.AddHttpClient(); // Đăng ký HttpClient cho DI container
+        // Services
+        builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
-        // Register services and repositories
-        builder.Services.AddScoped<IRoleService, RoleService>(); // Đăng ký dịch vụ AccountService
-        builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
-        builder.Services.AddScoped<IChatMessageService, ChatMessageService>();                                                                     // Đăng ký dịch vụ ChatMessageService                                                                                                            // Đăng ký dịch vụ ChatSessionService
+        builder.Services.AddScoped<IRoleService, RoleService>();
+        builder.Services.AddScoped<IAccountEmpService, AccountEmpService>();
+        builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
         builder.Services.AddScoped<IChatSessionService, ChatSessionService>();
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
         builder.Services.AddScoped<IAccountCusService, AccountCusService>();
-
-
-        builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>(); // MedicalRecordService
-                                                                                   //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
+        builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-        builder.Services.AddControllers().AddJsonOptions(options =>
+
+        builder.Services.AddHttpClient();
+
+        // Controllers & JSON
+        builder.Services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
+
+        // AutoMapper
+        builder.Services.AddAutoMapper(cfg =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.WriteIndented = true;
+            cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
         });
 
-        // Add controllers and Swagger
-        builder.Services.AddControllers(); // Đăng ký các controller
-        builder.Services.AddEndpointsApiExplorer(); // Thêm API Explorer cho Swagger
-        builder.Services.AddSwaggerGen(); // Thêm Swagger để tạo tài liệu API
+        // SignalR
+        builder.Services.AddSignalR();
 
+        // CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader());
+        });
 
+        // Swagger
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-        // Add Quartz services
+        // Quartz Scheduler
         builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
         builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
         builder.Services.AddSingleton<CallApiJob>();
         builder.Services.AddHostedService<QuartzHostedService>();
 
+        // Run job every minute
         builder.Services.AddSingleton(new JobSchedule(
             jobType: typeof(CallApiJob),
-            cronExpression: "0 17 13 * * ?" // Lịch trình gửi email lúc 17:30 hàng ngày
+            cronExpression: "0 * * * * ?"
         ));
 
+        // Run job every day at 17:30
         builder.Services.AddSingleton(new JobSchedule(
             jobType: typeof(CallApiJob),
-            cronExpression: "0 * * * * ?" // Lịch trình gửi email mỗi phút
+            cronExpression: "0 30 17 * * ?"
         ));
 
-        var app = builder.Build(); // Xây dựng ứng dụng
+        var app = builder.Build();
 
-        app.UseCors(builder =>
-        {
-            builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader(); // Cấu hình CORS
-        }); // Kích hoạt chính sách CORS
-
-        // Configure middleware pipeline
+        // Middleware Pipeline
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger(); // Sử dụng Swagger trong môi trường phát triển
-            app.UseSwaggerUI(); // Sử dụng giao diện Swagger UI
-            app.UseDeveloperExceptionPage(); // Sử dụng trang lỗi dành cho nhà phát triển
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
         else
         {
-            app.UseHsts(); // Sử dụng HSTS trong môi trường sản xuất
+            app.UseHsts();
         }
-        app.UseSwagger(); // Sử dụng Swagger
 
-        app.UseSwaggerUI(); // Sử dụng giao diện Swagger UI
-        app.UseHttpsRedirection(); // Chuyển hướng các yêu cầu HTTP sang HTTPS
-        app.UseStaticFiles(); // Phục vụ các tệp tĩnh
-        app.UseRouting(); // Kích hoạt định tuyến
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
+        app.UseCors("AllowAll");
 
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-        app.UseAuthentication(); // Kích hoạt middleware xác thực
-        app.UseAuthorization(); // Kích hoạt middleware phân quyền
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers(); // Định tuyến đến các controller
-        });
-        // Cấu hình SignalR
+        // Endpoints
+        app.MapControllers();
         app.MapHub<ChatHub>("/chathub");
 
-        app.Run(); // Chạy ứng dụng
+        app.Run();
     }
 }

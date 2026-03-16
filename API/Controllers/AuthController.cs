@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc; // Sử dụng cho ControllerBase
 using API.Server.DTOs.Account; // Namespace chứa các DTOs
 using API.Server.Interfaces; // Namespace chứa các dịch vụ
-using API.Server.Models; // Namespace chứa các model
 using AutoMapper;
 using System.Threading.Tasks;
 using API.Services;
+using API.Models;
 
 namespace API.Server.Controllers
 {

@@ -2,13 +2,39 @@ namespace API.Models
 {
     public class Note
     {
-        public int Id { get; set; } // Mã định danh của ghi chú
-        public string? Content { get; set; } // Nội dung của ghi chú
-        public DateTime CreatedDate { get; set; } // Ngày tạo ghi chú
-        public int? MedicalRecordId { get; set; } // Khóa ngoại tới hồ sơ y tế
-        public MedicalRecord MedicalRecord { get; set; } // Đối tượng hồ sơ y tế
-        public int? DiagnosisId { get; set; } // Khóa ngoại tới chẩn đoán
-        public Diagnosis Diagnosis { get; set; } // Đối tượng chẩn đoán
-    }
+        /// <summary>
+        /// Mã định danh của ghi chú
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Nội dung của ghi chú
+        /// </summary>
+        public string? Content { get; set; }
+
+        /// <summary>
+        /// Ngày tạo ghi chú
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// Khóa ngoại tới hồ sơ y tế
+        /// </summary>
+        public int? MedicalRecordId { get; set; }
+
+        /// <summary>
+        /// Đối tượng hồ sơ y tế
+        /// </summary>
+        public MedicalRecord? MedicalRecord { get; set; }
+
+        /// <summary>
+        /// Khóa ngoại tới chẩn đoán
+        /// </summary>
+        public int? DiagnosisId { get; set; }
+
+        /// <summary>
+        /// Đối tượng chẩn đoán
+        /// </summary>
+        public Diagnosis? Diagnosis { get; set; }
+    }
 }

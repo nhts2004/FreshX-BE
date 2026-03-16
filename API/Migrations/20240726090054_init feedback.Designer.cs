@@ -13,7 +13,7 @@ namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240726090054_init feedback")]
-    partial class initfeedback
+    partial class InitFeedback
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

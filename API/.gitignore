@@ -6,3 +6,6 @@
 .vs/
 bin/
 obj/
+
+appsetting.Development.json
+appsetting.Production.json

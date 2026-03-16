@@ -2,10 +2,24 @@ namespace API.Models
 {
     public class Advice
     {
-        public int Id { get; set; } // Mã định danh lời khuyên
-        public int? DiagnosisId { get; set; } // Mã chẩn đoán liên quan
-        public Diagnosis Diagnosis { get; set; } // Tham chiếu đến đối tượng chẩn đoán
-        public string? Content { get; set; } // Nội dung lời khuyên
-    }
+        /// <summary>
+        /// Mã định danh lời khuyên
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Mã chẩn đoán liên quan
+        /// </summary>
+        public int? DiagnosisId { get; set; }
+
+        /// <summary>
+        /// Tham chiếu đến đối tượng chẩn đoán
+        /// </summary>
+        public Diagnosis? Diagnosis { get; set; }
+
+        /// <summary>
+        /// Nội dung lời khuyên
+        /// </summary>
+        public string? Content { get; set; }
+    }
 }

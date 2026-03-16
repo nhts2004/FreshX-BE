@@ -5,13 +5,44 @@ namespace API.Models
     /// </summary>
     public class Appointment
     {
-        public int Id { get; set; } // Mã định danh của cuộc hẹn
-        public DateTime AppointmentDate { get; set; } // Ngày và giờ của cuộc hẹn
-        public int? CustomerId { get; set; } // Mã định danh của khách hàng (bệnh nhân)
-        public Customer Customer { get; set; } // Tham chiếu đến đối tượng khách hàng
-        public int? EmployeeId { get; set; } // Mã định danh của nhân viên (bác sĩ hoặc nhân viên y tế)
-        public Employee Employee { get; set; } // Tham chiếu đến đối tượng nhân viên
-        public string? Description { get; set; } // Mô tả chi tiết về cuộc hẹn
-        public string? Status { get; set; } // Trạng thái của cuộc hẹn (Scheduled, Completed, Cancelled)
+        /// <summary>
+        /// Mã định danh của cuộc hẹn
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Ngày và giờ của cuộc hẹn
+        /// </summary>
+        public DateTime AppointmentDate { get; set; }
+
+        /// <summary>
+        /// Mã định danh của khách hàng (bệnh nhân)
+        /// </summary>
+        public int? CustomerId { get; set; }
+
+        /// <summary>
+        /// Tham chiếu đến đối tượng khách hàng
+        /// </summary>
+        public Customer? Customer { get; set; }
+
+        /// <summary>
+        /// Mã định danh của nhân viên (bác sĩ hoặc nhân viên y tế)
+        /// </summary>
+        public int? EmployeeId { get; set; }
+
+        /// <summary>
+        /// Tham chiếu đến đối tượng nhân viên
+        /// </summary>
+        public Employee? Employee { get; set; }
+
+        /// <summary>
+        /// Mô tả chi tiết về cuộc hẹn
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
+        /// Trạng thái của cuộc hẹn (Scheduled, Completed, Cancelled)
+        /// </summary>
+        public string? Status { get; set; }
     }
 }

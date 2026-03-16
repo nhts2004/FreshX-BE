@@ -1,6 +1,6 @@
 using API.DTOs.AccountEmp;
+using API.Models;
 using API.Server.DTOs.Account;
-using API.Server.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

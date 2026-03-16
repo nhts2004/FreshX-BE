@@ -1,6 +1,6 @@
+using API.Models;
 using API.Server.DTOs.RolesDTO;
 using API.Server.Interfaces;
-using API.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Server.Controllers

@@ -5,13 +5,44 @@ namespace API.Models
     /// </summary>
     public class ChatMessage
     {
-        public int Id { get; set; } // Mã định danh của đoạn chat
-        public int? ChatSessionId { get; set; } // Mã định danh của cuộc trò chuyện
-        public ChatSession ChatSession { get; set; } // Tham chiếu đến đối tượng cuộc trò chuyện
-        public string Sender { get; set; } // Người gửi (Customer, Employee, hoặc Bot)
-        public string Message { get; set; } // Nội dung đoạn chat
-        public string MessageType { get; set; } // Loại tin nhắn (text, image, etc.)
-        public DateTime Timestamp { get; set; } // Thời gian gửi
-        public string ImageUrl { get; set; } // URL của hình ảnh (nếu có)
+        /// <summary>
+        /// Mã định danh của đoạn chat
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Mã định danh của cuộc trò chuyện
+        /// </summary>
+        public int? ChatSessionId { get; set; }
+
+        /// <summary>
+        /// Tham chiếu đến đối tượng cuộc trò chuyện
+        /// </summary>
+        public ChatSession? ChatSession { get; set; }
+
+        /// <summary>
+        /// Người gửi (Customer, Employee, hoặc Bot)
+        /// </summary>
+        public string? Sender { get; set; }
+
+        /// <summary>
+        /// Nội dung đoạn chat
+        /// </summary>
+        public string? Message { get; set; }
+
+        /// <summary>
+        /// Loại tin nhắn (text, image, etc.)
+        /// </summary>
+        public string? MessageType { get; set; }
+
+        /// <summary>
+        /// Thời gian gửi
+        /// </summary>
+        public DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// URL của hình ảnh (nếu có)
+        /// </summary>
+        public string? ImageUrl { get; set; }
     }
 }

@@ -2,11 +2,29 @@ namespace API.Models
 {
     public class Exercise
     {
-        public int Id { get; set; } // Mã định danh của bài tập
-        public string? Name { get; set; } // Tên của bài tập
-        public string? Description { get; set; } // Mô tả của bài tập
-        public int? DiagnosisId { get; set; } // Khóa ngoại tới chẩn đoán
-        public Diagnosis Diagnosis { get; set; } // Đối tượng chẩn đoán
-    }
+        /// <summary>
+        /// Mã định danh của bài tập
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Tên của bài tập
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Mô tả của bài tập
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
+        /// Khóa ngoại tới chẩn đoán
+        /// </summary>
+        public int? DiagnosisId { get; set; }
+
+        /// <summary>
+        /// Đối tượng chẩn đoán
+        /// </summary>
+        public Diagnosis? Diagnosis { get; set; }
+    }
 }

@@ -1,5 +1,4 @@
 using API.Models;
-using API.Server.Models;
 
 namespace API.Services
 {

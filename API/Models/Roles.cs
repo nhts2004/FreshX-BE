@@ -1,12 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace API.Server.Models
+﻿namespace API.Models
 {
     public class Role
     {
-        public int Id { get; set; } // Mã định danh của vai trò
-        public string? RoleName { get; set; } // Tên của vai trò
-        public ICollection<AccountEmp> AccountEmp { get; set; } // Danh sách tài khoản nhân viên
-    }
+        /// <summary>
+        /// Mã định danh của vai trò
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Tên của vai trò
+        /// </summary>
+        public string? RoleName { get; set; }
+
+        /// <summary>
+        /// Danh sách tài khoản nhân viên
+        /// </summary>
+        public ICollection<AccountEmp>? AccountEmp { get; set; }
+    }
 }

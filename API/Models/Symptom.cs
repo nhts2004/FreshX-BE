@@ -2,9 +2,21 @@ namespace API.Models
 {
     public class Symptom
     {
-        public int Id { get; set; } // Mã định danh của triệu chứng
-        public string? Name { get; set; } // Tên của triệu chứng
-        public string? Description { get; set; } // Mô tả của triệu chứng
-        public ICollection<DiagnosisSymptom> DiagnosisSymptoms { get; set; }
+        /// <summary>
+        /// Mã định danh của triệu chứng
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Tên của triệu chứng
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Mô tả của triệu chứng
+        /// </summary>
+        public string? Description { get; set; }
+
+        public ICollection<DiagnosisSymptom> DiagnosisSymptoms { get; set; } = new List<DiagnosisSymptom>();
     }
 }

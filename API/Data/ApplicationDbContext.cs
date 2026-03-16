@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using API.Models;
-using API.Server.Models;
 using NuGet.Protocol;
 
 namespace API
@@ -134,7 +133,7 @@ namespace API
                 .WithOne(cm => cm.ChatSession)
                 .HasForeignKey(cm => cm.ChatSessionId);
             //Feedback
-            modelBuilder.Entity<Feedback>().HasOne(f => f.AccountCus).WithMany(a => a.Feebacks).
+            modelBuilder.Entity<Feedback>().HasOne(f => f.AccountCus).WithMany(a => a.Feedbacks).
                 HasForeignKey(a => a.AccountId);
         }
     }

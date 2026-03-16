@@ -1,5 +1,5 @@
-﻿using API.Server.DTOs.RolesDTO;
-using API.Server.Models;
+﻿using API.Models;
+using API.Server.DTOs.RolesDTO;
 
 namespace API.Server.Interfaces
 {

@@ -5,12 +5,34 @@ namespace API.Models
     /// </summary>
     public class MedicalRecord
     {
-        public int Id { get; set; } // Mã định danh của hồ sơ y tế
-        public DateTime RecordDate { get; set; } // Ngày ghi nhận hồ sơ
-        public string? Details { get; set; } // Chi tiết hồ sơ
-        public int? CustomerId { get; set; } // Khóa ngoại tới khách hàng
-        public Customer Customer { get; set; } // Đối tượng khách hàng
-        public ICollection<Note> Notes { get; set; } // Ghi chú liên quan đến hồ sơ y tế
-    }
+        /// <summary>
+        /// Mã định danh của hồ sơ y tế
+        /// </summary>
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Ngày ghi nhận hồ sơ
+        /// </summary>
+        public DateTime RecordDate { get; set; }
+
+        /// <summary>
+        /// Chi tiết hồ sơ
+        /// </summary>
+        public string? Details { get; set; }
+
+        /// <summary>
+        /// Khóa ngoại tới khách hàng
+        /// </summary>
+        public int? CustomerId { get; set; }
+
+        /// <summary>
+        /// Đối tượng khách hàng
+        /// </summary>
+        public Customer? Customer { get; set; }
+
+        /// <summary>
+        /// Ghi chú liên quan đến hồ sơ y tế
+        /// </summary>
+        public ICollection<Note>? Notes { get; set; }
+    }
 }
